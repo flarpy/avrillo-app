@@ -18,7 +18,10 @@ class KanyeDriver extends QuoteDriver implements QuoteInterface
     public function get(): array
     {
         if(Cache::has(self::CACHE_KEY)){
-            return Cache::get(self::CACHE_KEY);
+            $cachedData = Cache::get(self::CACHE_KEY);
+            if(is_array($cachedData)){
+                return $cachedData;
+            }
         }
         $client = new Client();
         try {

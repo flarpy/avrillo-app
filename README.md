@@ -16,11 +16,11 @@ docker run --rm \
     composer install --ignore-platform-reqs
 ``````    
 
-from this directory
-1. `cp .env.example .env`
-2. `./vendor/bin/sail up -d`
-3. `sail artisan key:generate`
+`cp .env.example .env`
 
+`./vendor/bin/sail up -d`
+
+`sail artisan key:generate`
 
 ## Usage
 Interact with the api at http://localhost

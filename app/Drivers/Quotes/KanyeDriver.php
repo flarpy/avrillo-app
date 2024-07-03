@@ -2,9 +2,13 @@
 
 namespace App\Drivers\Quotes;
 
+use App\Exceptions\QuoteException;
 use App\Interfaces\QuoteInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class KanyeDriver extends QuoteDriver implements QuoteInterface
 {
@@ -17,8 +21,20 @@ class KanyeDriver extends QuoteDriver implements QuoteInterface
             return Cache::get(self::CACHE_KEY);
         }
         $client = new Client();
-        $response = $client->get(env('KANYE_API_URL'));
-        $this->quotes = json_decode($response->getBody()->getContents());
+        try {
+            $response = $client->get(env('KANYE_API_URL'));
+        } catch (ClientException $e) {
+            Log::info($e->getMessage());
+            abort(400, 'Sorry, Kanye is having communication problems');
+        } catch (ServerException $e) {
+            Log::error($e->getMessage());
+            abort(500, 'Sorry, Kanye is in a meeting right now, please leave a message');
+        }
+        $quoteData = $response->getBody()->getContents();
+        if(false === json_validate($quoteData)){
+            throw new QuoteException('Invalid quote data: '. $quoteData);
+        }
+        $this->quotes = json_decode($quoteData);
         Cache::put(self::CACHE_KEY, $this->quotes, self::CACHE_TTL);
         return $this->quotes;
     }

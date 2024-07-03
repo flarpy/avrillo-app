@@ -25,7 +25,7 @@ class TokenAuth
         };
 
         // in a real application, tokens would obviously be issued per user, not stored in an env file.
-        if($request->header(self::HEADER_NAME) !== env('API_TOKEN')){
+        if($request->header(self::HEADER_NAME) !== env('KANYE_API_TOKEN')){
             return response()->json(['error' => 'Invalid api token'],403);
         };
 

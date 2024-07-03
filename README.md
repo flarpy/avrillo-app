@@ -3,14 +3,23 @@
 
 Note: Swagger documentation would be a good addition for production
 
-## Installation
-from this directory
-1. `composer install`
-2. `cp .env.example .env`
-3. `php artisan key:generate`
+## Requirements
+Docker
 
-### Run
-1. `php artisan serve`
+## Installation
+``````
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php83-composer:latest \
+    composer install --ignore-platform-reqs
+``````    
+
+from this directory
+1. `./vendor/bin/sail up -d`
+2. `cp .env.example .env`
+3. `sail artisan key:generate`
 
 
 ## Usage
